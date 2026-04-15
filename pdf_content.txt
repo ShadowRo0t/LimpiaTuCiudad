@@ -1,0 +1,925 @@
+
+=== PÁGINA 1 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+           
+Especificación  de  Casos  de  Uso   LimpiaTuCiudad  Fecha:  24/3/2026                       
+Página  1  
+=== PÁGINA 2 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Tabla  de  contenido   Historial  de  Versiones  2 
+Información  del  Proyecto  3 
+Aprobaciones  3 
+Resumen  Ejecutivo  3 
+Diagrama  de  Casos  de  Uso  4 
+Descripción  de  Actores  5 
+[Nombre  de  Actor  1]  6 
+Especificación  de  Casos  de  Uso  6 
+[Nombre  de  Caso  de  Uso  Nro.  1]  7 
+                        
+Página  2  
+=== PÁGINA 3 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Historial  de  Versiones  
+Fecha  Versión  Autor  Organización  Descripción                      
+Información  del  Proyecto  
+Empresa  /  Organización  UNAB  Proyecto  LimpiaTuCIudad  Fecha  de  preparación  24/03/2026  Cliente  Cristian  Rojas  Patrocinador  principal  Cristian  Rojas  Gerente  /  Líder  de  Proyecto  Felipe  Arancibia   Gerente  /  Líder  de  Desarrollo  de  Software  
+Jose  Tomas  Mackliff  
+Aprobaciones  
+Nombre  y  Apellido  Cargo  Departamento  u  Organización  
+Fecha  Firma  
+  
+    
+  
+    
+  
+    
+  
+    
+           
+Página  3  
+=== PÁGINA 4 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Resumen  Ejecutivo  
+El  presente  documento  detalla  la  especificación  de  casos  de  uso  para  el  proyecto  
+de
+ 
+LimpiaTuCiudad.
+ 
+El
+ 
+escenario
+ 
+de
+ 
+negocio
+ 
+que
+ 
+se
+ 
+describe
+ 
+aborda
+ 
+la
+ 
+necesidad
+ 
+de
+ 
+centralizar
+ 
+y
+ 
+optimizar
+ 
+la
+ 
+gestión
+ 
+de
+ 
+problemas
+ 
+urbanos
+ 
+(estos
+ 
+pueden
+ 
+ser
+ 
+los
+ 
+baches,
+ 
+luminarias
+ 
+defectuosas
+ 
+y
+ 
+la
+ 
+acumulacion
+ 
+de
+ 
+basura),
+ 
+resolviendo
+ 
+la
+ 
+actual
+ 
+fragmentación
+ 
+de
+ 
+canales
+ 
+que
+ 
+provoca
+ 
+la
+ 
+duplicidad
+ 
+de
+ 
+reportes
+ 
+y
+ 
+retrasos
+ 
+en
+ 
+la
+ 
+atención
+ 
+requerida.
+ 
+Para
+ 
+dar
+ 
+la
+ 
+solución
+ 
+al
+ 
+escenario
+ 
+planteado,
+ 
+el
+ 
+documento
+ 
+agrupa
+ 
+y
+ 
+describe
+ 
+los
+ 
+siguientes
+ 
+elementos
+ 
+requeridos:
+ 
+ Áreas  Organizacionales  Involucradas:   ●  Ciudadanía:  Actor  externo  que  da  origen  a  las  solicitudes  y  audita  la  
+resolución
+ ●  Municipalidad  (Gestión):  Área  encargada  de  la  recepción,  filtro,  priorización  
+de
+ 
+recursos
+ 
+y
+ 
+análisis
+ 
+de
+ 
+datos
+ ●  Operaciones  en  terreno  (Cuadrillas):  Área  técnica  responsable  de  la  
+ejecución
+ 
+física
+ 
+de
+ 
+las
+ 
+reparaciones
+ 
+de
+ 
+la
+ 
+ciudad
+  Procesos  y  subprocesos  descritos:  1.  Proceso  de  captura  y  recepción  de  reportes:  ○  Subprocesos:  Captura  de  evidencia  visual,  obtenida  de  
+geolocalización
+ 
+satelital
+ 
+y
+ 
+evaluación
+ 
+automática
+ 
+de
+ 
+datos
+ 2.  Proceso  de  filtro  y  priorización:  ○  Subproceso:  Detección  algorítmica  de  reportes  duplicados,  
+clasificacion
+ 
+por
+ 
+categoria
+ 
+y
+ 
+priorización
+ 
+basada
+ 
+en
+ 
+urgencia
+ 
+o
+ 
+densidad
+ 
+de
+ 
+afectación
+ 3.  Proceso  de  gestión  de  despliegue:  ○  Subprocesos:  Asignación  estructurada  de  tareas  según  zona  y  
+especialidad
+ 
+de
+ 
+la
+ 
+cuadrilla
+ 
+y
+ 
+generación
+ 
+de
+ 
+rutas
+ 
+de
+ 
+trabajo
+  4.  Proceso  de  resolución  y  seguimiento:  ○  Subprocesos:  Cierre  de  tareas  con  evidencia  en  terreno,  envío  de  
+notificaciones
+ 
+de
+ 
+actualización
+ 
+al
+ 
+ciudadano
+ 
+y
+ 
+generación
+ 
+de
+ 
+métricas
+ 
+de
+ 
+rendimiento
+  Módulos  del  nuevo  sistema:   Para  soportar  los  procesos  mencionados,  los  casos  de  uso  documentados  
+describen
+ 
+el
+ 
+comportamiento
+ 
+de
+ 
+tres
+ 
+módulos
+ 
+principales
+ 
+los
+ 
+cuales
+ 
+componen
+ 
+el
+ 
+sistema
+ 
+centralizado:
+  ●  Modulo  App  ciudadano:  Interfaz  móvil  enfocada  en  la  creación  rápida  de  
+reportes
+ 
+georreferenciados
+ 
+y
+ 
+el
+ 
+seguimiento
+ 
+de
+ 
+su
+ 
+estado
+ 
+Página  4  
+=== PÁGINA 5 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+●  Módulo  Portal  municipal:  Panel  de  control  web  para  funcionarios,  enfocado  
+en
+ 
+el
+ 
+tablero
+ 
+de
+ 
+gestión
+ 
+de
+ 
+incidencias
+ 
+asignación
+ 
+de
+ 
+cuadrillas
+ 
+y
+ 
+visualización
+ 
+de
+ 
+Dashboards
+ 
+analiticos
+ ●  Módulo  App  cuadrilla:  Interfaz  móvil  simplificada  para  que  el  personal  en  
+terreno
+ 
+reciba
+ 
+su
+ 
+lista
+ 
+de
+ 
+tareas
+ 
+diarias,
+ 
+rutas
+ 
+optimizadas
+ 
+y
+ 
+reporte
+ 
+de
+ 
+la
+ 
+finalización
+ 
+de
+ 
+los
+ 
+trabajos
+ 
+Página  5  
+=== PÁGINA 6 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Diagrama  de  Casos  de  Uso
+ 
+Página  6  
+
+=== PÁGINA 7 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+  
+Página  7  
+
+=== PÁGINA 8 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+ 
+Página  8  
+
+=== PÁGINA 9 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+ 
+Página  9  
+
+=== PÁGINA 10 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Página  10  
+
+=== PÁGINA 11 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+ 
+ 
+ 
+Página  11  
+
+=== PÁGINA 12 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Descripción  de  Actores  
+[Persona]  
+Actor  Persona  Identificador:  1  Descripción  El  ciudadano  el  cual  reporta  el  incidente  dentro  de  la  aplicación   Características  Es  un  ciudadano  cualquiera,  lleva  un  celular,  realiza  los  reportes  Relación  Es  quien  notifica  a  la  municipalidad  mediante  reportes  algún  incidente,  es  el  gatillante  de  todo   Referencias  Creación  del  reporte,  adjuntan  fotos,  adjuntan  referencia  geográfica,  pueden  ver  el  estado  de  su  reporte   Atributos  Nombre  Descripción  Tipo  Nombre  Nombre  del  ciudadano  String  ID  Identificador  único  de  la  persona  int  Correo   Correo  electrónico  de  la  persona  para  enviarle  las  actualizaciones   
+String  
+Contraseña  La  contraseña  con  la  cual  el  ciudadano  se  loguea  en  la  aplicación   
+String  
+ Comentarios  En  resumen  una  persona  que  viva  en  la  localidad,  que  sea  mayor  de  edad  y  decida  hacer  los  reportes    
+[Municipalidad]  
+Actor  Municipalidad  Identificador:  2  Descripción  Encargado  de  la  municipalidad  que  debe  revisar  las  alertas  enviadas,  catalogarlas  y  desplegar  a  la  cuadrilla  en  la  fecha  que  destinen  conveniente  Características  Es  un  grupo  selecto,  pueden  ver,  crear,  borrar  y  buscar  reportes,  pueden  catalogar  Relación  Son  quienes  mantienen  el  contacto  con  los  ciudadanos  para  informarles  que  la  mantención  fue  realizada,  quien  despliega  a  la  cuadrilla  Referencias  Analizan  los  reportes,  despliegan  a  la  cuadrilla,  mantienen  el  contacto  con  el  ciudadano,  priorizan  la  intervención   Atributos  
+Página  12  
+=== PÁGINA 13 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Nombre  Descripción  Tipo  Nombre  Nombre  de  la  municipalidad  String  ID  Idenritificador  unico  del  funcionario   int  Correo  Correo  electrónico  que  valide  que  es  un  funcionario  municipal  
+String  
+Contraseña  Contraseña  para  que  entre  en  la  aplicación  y  pueda  loguearse,  asegurando  que  es  un  funcionario  municipal  
+String  
+ Comentarios  Es  quien  se  encarga  de  poder  ver  cada  caso,  lo  cataloga  y  despliega  a  la  cuadrilla  indicada  según  sea  la  necesidad  y  el  nivel  de  gravedad  del  caso   
+[Cuadrilla  de  reparación]  
+Actor  Cuadrilla  Identificador:  3  Descripción  Encargados  del  despliegue  y  reparación  del  lugar  indicado  mediante  la  aprobación  de  la  municipalidad  Características  Grupo  selecto,  solo  pueden  ver  los  reportes  autorizados  por  la  municipalidad  Relación  Son  quienes  terminan  con  la  tarea  de  limpieza,  mediante  la  indicación  de  la  municipalidad  y  terminan  notificando  a  la  misma  que  la  labor  está  cumplida,  para  que  la  municipalidad  se  lo  informe  al  ciudadano  Referencias  Se  despliegan   Atributos  Nombre  Descripción  Tipo  ID  Id  con  la  cual  se  puede  determinar  la  cuadrilla  la  cual  irá  al  incidente  
+int  
+Nombre  Nombre  del  equipo  de  cuadrilla  y/o  del  personal  de  esta  
+String  
+Especialidad  La  especialización  de  la  cuadrilla,  con  esta  se  pueden  dividir  según  el  tipo  de  problema  reportado  
+String  
+Zona  La  delimitación  geográfica  por  la  cual  la  cuadrilla  se  mueve  y  trabaja  
+String  
+ Comentarios  Son  quienes  se  mueven  para  las  reparaciones  y  terminan  subiendo  la  evidencia  de  que  lo  completaron  
+Página  13  
+=== PÁGINA 14 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Especificación  de  Casos  de  Uso  
+[Reporte  incidente] 
+Caso  de  Uso
+ 
+Reporte  incidente  urbano  Identificador:   c1  Actores  Todos  los  actores:  ciudadano,  municipalidad  y  cuadrilla  Tipo  Primario  Referencias  Requerimientos:  HU1  (Gestión  de  reportes)  ,  HU2  (Detección  de  duplicados).  Precondición  El  ciudadano  debe  estar  registrado  en  la  aplicación,  haber  iniciado  sesión  y  tener  permisos  de  GPS  y  cámara  habilitados.  Postcondición  Se  crea  un  nuevo  reporte  en  el  sistema,  indicando  el  lugar  exacto,  la  imagen  adjunta  del  problema  y  su  estado  inicial  queda  como  "Pendiente".  Descripción  El  ciudadano  utiliza  la  aplicación  móvil  para  notificar  un  problema  en  la  ciudad.  Adjunta  una  fotografía  y  el  sistema  captura  su  ubicación  geográfica.  El  sistema  verifica  que  la  información  esté  completa  y  que  no  sea  un  reporte  duplicado  antes  de  guardarlo.  Resumen  Proceso  de  creación  y  validación  inicial  de  un  reporte  ciudadano  mediante  georreferenciación  y  evidencia  visual.   
+Curso  Normal   Nro.  Ejecutor  Paso  o  Actividad  1  Ciudadano  Selecciona  la  opción  "Crear  nuevo  reporte"  en  la  aplicación.  2  Sistema  Despliega  el  formulario  para  el  reporte  de  incidentes.  3  Ciudadano  Adjunta  una  o  más  fotografías  del  problema  y  selecciona  la  categoría.  4  Sistema  Captura  automáticamente  las  coordenadas  GPS  del  dispositivo.  5  Ciudadano  Revisa  la  información  y  presiona  "Enviar  reporte".  6  Sistema  Valida  que  los  campos  obligatorios  estén  completos.  7  Sistema  Ejecuta  el  algoritmo  de  detección  de  duplicados  (compara  ubicación  y  tipo).  8  Sistema  Guarda  el  reporte  en  la  base  de  datos  y  muestra  un  mensaje  de  confirmación  al  ciudadano.  
+Página  14  
+=== PÁGINA 15 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+ 
+ 
+Cursos  Alternos   Nro.  Descripción  de  acciones  alternas  4.1  Falla  de  GPS:  Si  el  sistema  no  puede  obtener  las  coordenadas  automáticamente,  habilita  un  mapa  para  que  el  ciudadano  ingrese  la  ubicación  de  forma  manual.  El  flujo  retorna  al  paso  5.  6.1  Datos  incompletos:  Si  falta  la  foto  o  la  categoría,  el  sistema  detiene  el  envío  y  notifica  al  usuario  qué  campos  faltan.  El  flujo  retorna  al  paso  3.  7.1  Reporte  Duplicado:  Si  el  sistema  detecta  que  el  reporte  ya  existe  en  ese  radio,  notifica  al  ciudadano,  vincula  este  nuevo  aviso  al  reporte  original  y  finaliza  el  caso  de  uso  sin  crear  uno  nuevo.     
+Página  15  
+=== PÁGINA 16 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+PLANTILLA  CASO  DE  USO  CU[número  caso]  CU01  
+Objetivos  asociados  Permitir  a  los  ciudadanos  registrar  problemas  urbanos  de  manera  centralizada  y  estructurada  para  evitar  la  fragmentación  de  la  información  y  facilitar  su  priorización.  
+Actor/es  Relacionados  Persona  (Iniciador),  Sistema  (Participante)  
+Requisitos  asociados  H1,  H2  
+Descripción  El  ciudadano  utiliza  la  aplicación  para  reportar  un  problema  urbano.  Proporciona  evidencia  visual  y  su  ubicación  geográfica.  El  sistema  valida  la  información  y  verifica  que  no  sea  un  reporte  duplicado  antes  de  enviarlo  a  la  municipalidad.  
+Precondición  El  ciudadano  (Persona)  debe  haber  iniciado  sesión  en  la  aplicación  y  tener  acceso  a  internet  y  GPS.  
+Secuencia  
+Normal  
+Paso  Actor  Sistema  
+1  Selecciona  la  opción  para  crear  un  nuevo  reporte.  
+Despliega  el  formulario  de  captura.  
+2  Adjunta  una  o  más  fotos  del  problema  urbano.  
+Solicita  permisos  y  procesa  las  imágenes.  
+3  Confirma  la  ubicación  obtenida  vía  GPS.  
+ 
+4    
+5    
+Post-condición  Se  crea  una  nueva  alerta  en  el  sistema  con  lugar  e  imagen  adjunta,  lista  para  ser  clasificada  por  la  Municipalidad.  
+Excepciones   Paso  Actor  Sistema  
+Página  16  
+=== PÁGINA 17 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+1  El  GPS  falla  o  es  inexacto.  Permite  la  introducción  manual  de  la  ubicación.  
+2   Detecta  que  es  un  reporte  duplicado  basándose  en  ubicación  y  tipo.  
+3   Notifica  al  ciudadano  que  el  reporte  ya  existe  y  vincula  el  nuevo  aviso  al  reporte  original,  finalizando  el  caso  de  uso.  
+Rendimiento:  Todo  el  proceso  de  reporte  debe  registrarse  en  menos  de  2  minutos.  
+Paso  Cota  de  tiempo  
+  
+Frecuencia  esperada  Alta  (múltiples  reportes  diarios  por  la  población).  
+Estabilidad  Alta  
+Comentarios  Este  es  el  caso  de  uso  gatillante  de  todo  el  flujo  del  sistema.  
+ PLANTILLA  CASO  DE  USO  CU[número  caso]  CU02  
+Objetivos  asociados  Organizar  y  priorizar  automáticamente  los  reportes  según  su  tipo,  urgencia  y  nivel  de  impacto  para  atender  primero  los  problemas  más  críticos.  
+Actor/es  Relacionados  Municipalidad  (Primario),  Sistema  (Participante).  
+Requisitos  asociados  HU3  
+Descripción  El  sistema  ordena  automáticamente  los  reportes  entrantes  en  un  tablero  por  prioridad  y  categoría.  El  funcionario  de  la  municipalidad  revisa  este  tablero,  analiza  los  reportes  y  tiene  la  capacidad  de  modificar  manualmente  la  prioridad  si  lo  considera  necesario.  
+Página  17  
+=== PÁGINA 18 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Precondición  El  funcionario  municipal  debe  estar  autenticado  en  el  sistema.  Deben  existir  reportes  previamente  ingresados  por  los  ciudadanos.  
+Secuencia  
+Normal  
+Paso  Actor  Sistema  
+1  Ingresa  a  la  sección  de  gestión  de  reportes.  
+Muestra  el  tablero  con  los  reportes  ordenados  por  prioridad  y  categoría  asignada  automáticamente.  
+2  Selecciona  un  reporte  específico  para  ver  sus  detalles.  
+Despliega  la  información  del  reporte  (ubicación,  tipo,  fotos).  
+3  Revisa  la  prioridad  automática  (evaluando  densidad  de  reportes  y  nivel  de  riesgo).  
+ 
+4  Modifica  manualmente  la  prioridad  del  reporte  (opcional).  
+Actualiza  la  prioridad  en  el  tablero  y  reordena  la  lista.  
+5    
+Post-condición  El  reporte  queda  clasificado,  con  una  prioridad  definitiva,  listo  para  ser  asignado  a  una  cuadrilla.  
+Excepciones  Paso  Actor  Sistema  
+1   No  detecta  reportes  nuevos  o  pendientes  de  clasificación  en  la  base  de  datos.  
+Página  18  
+=== PÁGINA 19 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+2   Muestra  un  mensaje  en  pantalla  indicando  "No  hay  incidencias  nuevas  por  gestionar".  
+3    
+Rendimiento  Paso  Cota  de  tiempo  
+1  La  carga  del  tablero  y  la  clasificación  automática  debe  ser  casi  instantánea.  
+Frecuencia  esperada  Alta  (revisión  diaria  y  constante  por  parte  de  los  funcionarios).  
+Estabilidad  Alta  
+Comentarios  Este  caso  de  uso  es  el  puente  entre  la  recepción  del  problema  (Ciudadano)  y  la  resolución  (Cuadrilla).  
+ 
+PLANTILLA  CASO  DE  USO  CU[número  caso]  CU03  
+Objetivos  asociados  Asignar,  organizar  y  gestionar  las  tareas  de  reparación  a  las  cuadrillas  de  forma  óptima,  basándose  en  su  ubicación  y  especialidad.  
+Actor/es  Relacionados  Municipalidad  (Gatillador),  Cuadrilla  (Receptor),  Sistema  (Participante).  
+Requisitos  asociados  HU4  
+Descripción  El  sistema  procesa  los  reportes  priorizados  y  los  asigna  automáticamente  a  la  cuadrilla  idónea  según  la  zona  y  su  especialización.  Genera  una  lista  de  trabajo  diaria  con  rutas  sugeridas  y  el  detalle  del  problema.  
+Precondición  Las  cuadrillas  deben  estar  registradas  en  el  sistema  con  su  especialidad  y  zona  delimitada.  Deben  existir  reportes  clasificados  previamente  (CU02).  
+Página  19  
+=== PÁGINA 20 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Secuencia  
+Normal  
+Paso  Actor  Sistema  
+1   Filtra  los  reportes  pendientes  por  tipo  de  problema  y  geolocalización.  
+2   Asigna  las  tareas  a  la  cuadrilla  correspondiente  según  su  especialidad  y  zona.  
+3   Genera  una  lista  de  trabajo  diaria  calculando  rutas  optimizadas.  
+4  Ingresa  a  su  perfil  en  la  aplicación.  
+Muestra  la  lista  de  tareas  asignadas.  
+5  Selecciona  una  tarea  para  revisar  el  detalle.  
+Despliega  la  ubicación,  descripción  y  evidencia  visual  del  reporte.  
+Post-condición  Se  crea  una  nueva  alerta  en  el  sistema  con  lugar  e  imagen  adjunta,  lista  para  ser  clasificada  por  la  Municipalidad.  
+Excepciones   Paso  Actor  Sistema  
+1   Detecta  que  no  hay  cuadrillas  disponibles  con  la  especialidad  requerida  para  el  tipo  de  incidente.  
+2   Deja  el  reporte  en  estado  "Pendiente  de  asignación"  y  genera  una  alerta  visual  en  el  panel  de  la  Municipalidad.  
+3    
+Página  20  
+=== PÁGINA 21 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Rendimiento:  El  cálculo  automático  de  rutas  y  asignación  masiva  debe  generarse  de  forma  eficiente,  idealmente  en  menos  de  1  minuto  al  inicio  de  la  jornada.  
+Paso  Cota  de  tiempo  
+  
+Frecuencia  esperada  Media  (Se  ejecuta  de  forma  masiva  al  menos  una  vez  al  día  por  jornada,  o  dinámicamente  si  ingresan  reportes  urgentes).  
+Estabilidad  Alta  
+Comentarios  Este  proceso  requerirá  integración  con  alguna  API  de  mapas  (como  Google  Maps  o  Mapbox)  para  poder  sugerir  las  rutas  optimizadas  que  menciona  la  HU4.  
+  PLANTILLA  CASO  DE  USO  CU[número  caso]  CU04  
+Objetivos  asociados  Permitir  a  los  ciudadanos  hacer  seguimiento  de  sus  reportes  y  a  las  cuadrillas  notificar  que  la  labor  de  reparación  está  cumplida.  
+Actor/es  Relacionados  Cuadrilla  (Iniciador),  Sistema  (Participante),  Persona  (Receptor).  
+Requisitos  asociados  HU5  
+Descripción  Una  vez  que  la  cuadrilla  termina  el  trabajo  de  reparación,  actualiza  el  estado  en  el  sistema  subiendo  una  imagen  como  evidencia.  El  sistema  procesa  esto,  cambia  el  estado  a  "Resuelto"  y  envía  una  notificación  automática  al  ciudadano.  
+Precondición  La  cuadrilla  debe  tener  una  tarea  asignada  "En  proceso".  La  persona  debe  tener  registrado  un  correo  válido.  
+Secuencia  
+Normal  
+Paso  Actor  Sistema  
+Página  21  
+=== PÁGINA 22 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+1  Indica  en  la  app  que  la  reparación  ha  concluido  y  sube  una  foto  de  evidencia.  
+ 
+2   Registra  la  actualización  y  cambia  el  estado  del  reporte  a  "Resuelto".  
+3   Envía  automáticamente  una  notificación  push  y/o  email  al  ciudadano  alertando  el  cambio  de  estado.  
+4  (Persona)  Abre  la  notificación  para  revisar  el  reporte.  
+Muestra  el  historial  actualizado  del  reporte  y  la  foto  de  la  reparación.  
+5    
+Post-condición  El  reporte  queda  cerrado/resuelto  en  el  sistema  y  el  ciudadano  queda  informado  del  arreglo.  
+Excepciones   Paso  Actor  Sistema  
+1  Cuadrilla  Adjunta  un  archivo  de  evidencia  que  supera  el  peso  máximo  o  tiene  un  formato  no  soportado.  
+2   Muestra  un  mensaje  de  error  solicitando  que  se  suba  una  imagen  válida.  
+3   Falla  el  envío  automático  de  la  notificación  push  o  correo  al  ciudadano.  
+Página  22  
+=== PÁGINA 23 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+ 4   Registra  el  error  de  envío  internamente,  pero  mantiene  el  guardado  del  reporte  como  "Resuelto".  
+Rendimiento:  El  cambio  de  estado  en  la  base  de  datos  debe  ser  inmediato  (menos  de  3  segundos)  y  la  notificación  push/email  debe  dispararse  en  menos  de  10  segundos.  
+Paso  Cota  de  tiempo  
+  
+Frecuencia  esperada  Alta  (Cada  vez  que  una  cuadrilla  termina  una  labor  a  lo  largo  del  día).  
+Estabilidad  Alta  
+Comentarios  Se  debe  considerar  un  escenario  alterno  donde  la  cuadrilla  no  tenga  buena  señal  de  internet  en  el  lugar  de  reparación;  la  app  debería  permitir  guardar  el  estado  localmente  y  sincronizar  la  foto  y  el  cambio  de  estado  cuando  recupere  la  conexión.  
+  
+PLANTILLA  CASO  DE  USO  CU[número  caso]  CU05  
+Objetivos  asociados  Entregar  herramientas  a  la  municipalidad  para  administrar  el  sistema  y  tomar  decisiones  apoyadas  en  datos.  
+Actor/es  Relacionados  Municipalidad  (Iniciador),  Sistema  (Participante).  
+Requisitos  asociados  HU6  
+Descripción  El  funcionario  municipal  accede  a  un  panel  de  control  (dashboard)  para  analizar  el  rendimiento  de  las  reparaciones.  Puede  ver  mapas  de  calor,  filtrar  información  y  exportar  reportes  de  gestión.  
+Página  23  
+=== PÁGINA 24 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Precondición  El  funcionario  de  la  municipalidad  debe  estar  logueado.  El  sistema  debe  contar  con  un  volumen  de  reportes  históricos.  
+Secuencia  
+Normal  
+Paso  Actor  Sistema  
+1  Selecciona  la  sección  de  administración  y  analítica.  
+Despliega  el  dashboard  con  KPIs  (tiempo  promedio  de  resolución,  cantidad  de  reportes  por  zona,  estado  de  incidencias)  .  
+2  Navega  hacia  la  sección  de  mapas  de  calor.  
+Genera  un  mapa  visual  con  las  zonas  de  mayor  concentración  de  problemas.  
+3  Aplica  filtros  por  fecha  y  tipo  de  problema.  
+Actualiza  las  gráficas  y  KPIs  en  tiempo  real  basándose  en  los  filtros.  
+4  Presiona  el  botón  de  exportar.  
+Genera  un  informe  en  formato  PDF  o  Excel  y  comienza  la  descarga.  
+5    
+Post-condición  El  funcionario  obtiene  los  datos  visualizados  o  exportados  correctamente  para  su  análisis.  
+Excepciones   Paso  Actor  Sistema  
+1  Municipalidad  Aplica  un  filtro  de  fecha  o  zona  para  el  cual  no  existen  reportes  registrados.  
+2   Limpia  las  gráficas  y  muestra  el  mensaje  "No  hay  datos  para  los  filtros  seleccionados".  
+Página  24  
+=== PÁGINA 25 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+3   El  proceso  de  exportación  agota  el  tiempo  de  espera  (timeout)  debido  a  un  volumen  de  datos  demasiado  grande.  
+ 4   Cancela  la  exportación  y  muestra  un  error  sugiriendo  reducir  el  rango  de  fechas.  
+Rendimiento:  La  carga  del  dashboard  principal  y  los  mapas  de  calor  no  debe  superar  los  5  a  10  segundos.  La  exportación  de  PDF/Excel  debe  generarse  en  menos  de  30  segundos.  
+Paso  Cota  de  tiempo  
+  
+Frecuencia  esperada  Media-Baja  (Consultas  de  gestión  que  suelen  ser  diarias,  semanales  o  mensuales  por  parte  de  la  administración).  
+Estabilidad  Media-Alta  (Dependerá  del  volumen  de  datos  históricos  que  el  sistema  deba  procesar  al  aplicar  filtros  grandes).  
+Comentarios  A  medida  que  el  sistema  crezca  y  acumule  años  de  reportes,  la  carga  de  mapas  de  calor  podría  volverse  pesada,  por  lo  que  a  futuro  se  deberá  considerar  cargar  estos  datos  por  rangos  de  fechas  limitados  por  defecto.  
+ Épicas  +  HU  
+Épica  1:  Gestión  de  Reportes  Ciudadanos  
+Descripción:  Permite  a  los  ciudadanos  registrar  problemas  urbanos  de  forma  
+estructurada,
+ 
+incluyendo
+ 
+información
+ 
+relevante
+ 
+como
+ 
+descripción,
+ 
+imágenes
+ 
+y
+ 
+ubicación.
+ 
+HU1  
+Página  25  
+=== PÁGINA 26 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Como  ciudadano,  quiero  reportar  un  problema  urbano  desde  mi  celular  con  foto  y  
+ubicación
+ 
+automática,
+ 
+para
+ 
+que
+ 
+la
+ 
+municipalidad
+ 
+pueda
+ 
+identificarlo
+ 
+rápidamente
+ 
+y
+ 
+con
+ 
+precisión.
+ 
+Criterios  de  aceptación:  
+El  formulario  permite  adjuntar  una  o  más  fotos.  
+La  ubicación  se  obtiene  automáticamente  vía  GPS  con  opción  manual.  
+El  sistema  valida  campos  obligatorios.  
+El  reporte  se  registra  en  menos  de  2  minutos.  
+ 
+Épica  2:  Geolocalización  y  Detección  de  Duplicados  
+Descripción:  Permite  ubicar  geográficamente  los  reportes  y  evitar  duplicidad  de  
+información
+ 
+mediante
+ 
+validaciones
+ 
+automáticas.
+ 
+HU2  
+Como  sistema,  quiero  detectar  reportes  duplicados  basados  en  ubicación,  tipo  y  
+tiempo,
+ 
+para
+ 
+evitar
+ 
+sobrecarga
+ 
+y
+ 
+mejorar
+ 
+la
+ 
+gestión
+ 
+de
+ 
+incidencias.
+ 
+Criterios  de  aceptación:  
+Si  dos  reportes  están  dentro  de  un  radio  definido  y  son  del  mismo  tipo,  se  marcan  
+como
+ 
+duplicados.
+ 
+El  sistema  sugiere  reportes  existentes  antes  de  crear  uno  nuevo.  
+El  ciudadano  recibe  notificación  si  su  reporte  ya  existe.  
+Los  reportes  duplicados  se  vinculan  al  original.  
+ 
+Épica  3:  Clasificación  y  Priorización  de  Incidencias  
+Descripción:  Permite  organizar  y  priorizar  automáticamente  los  reportes  según  su  
+tipo,
+ 
+urgencia
+ 
+y
+ 
+nivel
+ 
+de
+ 
+impacto.
+ 
+HU3  
+Página  26  
+=== PÁGINA 27 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Como  funcionario  municipal,  quiero  que  los  reportes  se  clasifiquen  y  prioricen  
+automáticamente
+ 
+según
+ 
+urgencia
+ 
+y
+ 
+tipo,
+ 
+para
+ 
+atender
+ 
+primero
+ 
+los
+ 
+problemas
+ 
+más
+ 
+críticos.
+ 
+Criterios  de  aceptación:  
+Los  reportes  se  ordenan  en  un  tablero  por  prioridad.  
+Se  consideran  criterios  como  tipo  de  problema,  densidad  de  reportes  y  nivel  de  
+riesgo.
+ 
+El  sistema  permite  modificar  manualmente  la  prioridad.  
+Cada  reporte  tiene  una  categoría  asignada  automáticamente.  
+ 
+Épica  4:  Gestión  de  Tareas  y  Cuadrillas  
+Descripción:  Permite  asignar,  organizar  y  gestionar  las  tareas  de  reparación  a  las  
+cuadrillas
+ 
+según
+ 
+ubicación
+ 
+y
+ 
+especialidad.
+ 
+HU4  
+Como  jefe  de  cuadrilla,  quiero  recibir  tareas  asignadas  automáticamente  según  mi  
+zona
+ 
+y
+ 
+especialidad,
+ 
+para
+ 
+optimizar
+ 
+recursos
+ 
+y
+ 
+tiempos
+ 
+de
+ 
+traslado.
+ 
+Criterios  de  aceptación:  
+El  sistema  asigna  tareas  según  ubicación  y  tipo  de  cuadrilla.  
+Se  genera  una  lista  de  trabajo  diaria.  
+Las  tareas  incluyen  ubicación,  descripción  y  evidencia  visual.  
+Se  sugieren  rutas  optimizadas.  
+ 
+Épica  5:  Seguimiento  y  Notificaciones  
+Descripción:  Permite  a  los  ciudadanos  y  funcionarios  hacer  seguimiento  del  estado  
+de
+ 
+los
+ 
+reportes
+ 
+mediante
+ 
+notificaciones
+ 
+y
+ 
+visualización
+ 
+de
+ 
+estados.
+ 
+HU5  
+Página  27  
+=== PÁGINA 28 ===
+Documento  de  Especificación  de  Casos  de  Uso   
+Como  ciudadano,  quiero  ver  el  estado  de  mi  reporte  y  recibir  notificaciones,  para  
+tener
+ 
+visibilidad
+ 
+y
+ 
+confianza
+ 
+en
+ 
+la
+ 
+gestión
+ 
+municipal.
+ 
+Criterios  de  aceptación:  
+El  ciudadano  puede  ver  estados:  pendiente,  en  proceso,  resuelto.  
+Recibe  notificaciones  push  y/o  email  en  cada  cambio  de  estado.  
+Puede  consultar  el  historial  del  reporte.  
+Se  muestra  tiempo  estimado  de  resolución  (si  aplica).  
+ 
+Épica  6:  Administración,  Métricas  y  Análisis  
+Descripción:  Permite  a  la  municipalidad  administrar  el  sistema  y  tomar  decisiones  
+basadas
+ 
+en
+ 
+datos
+ 
+mediante
+ 
+dashboards
+ 
+y
+ 
+reportes.
+ 
+HU6  
+Como  funcionario  municipal,  quiero  visualizar  métricas  y  mapas  de  calor  de  los  
+reportes,
+ 
+para
+ 
+tomar
+ 
+decisiones
+ 
+basadas
+ 
+en
+ 
+datos.
+ 
+Criterios  de  aceptación:  
+El  dashboard  muestra  KPIs:  
+Tiempo  promedio  de  resolución  
+Cantidad  de  reportes  por  zona  
+Estado  de  incidencias  
+Se  visualizan  mapas  de  calor.  
+Se  pueden  aplicar  filtros  por  fecha,  tipo  y  estado.  
+Se  pueden  exportar  informes  en  PDF  y  Excel  
+Página  28  

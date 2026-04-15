@@ -1,0 +1,4 @@
+- [project_context](project_context.md) — Contexto del proyecto LimpiaTuCiudad y sus módulos
+- [tech_stack](tech_stack.md) — Stack tecnológico y dependencias del proyecto
+- [auth_credentials](auth_credentials.md) — Credenciales de demostración para testing
+- [architecture](architecture.md) — Estructura de carpetas y arquitectura del proyecto
