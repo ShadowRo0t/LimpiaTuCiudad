@@ -151,7 +151,6 @@ La aplicación utiliza `localStorage` para persistencia de datos:
 - Mapas de calor interactivos con Leaflet
 - Notificaciones push en tiempo real
 - Sistema de comentarios en reportes
-- Validación de fotos con IA para detección automática de tipo
 
 ## Licencia
 
