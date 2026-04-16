@@ -44,15 +44,70 @@ LimpiaTuCiudad es un sistema que permite a los ciudadanos reportar problemas urb
 
 ## Instalación
 
-```bash
-# Instalar dependencias
-npm install
+### Desarrollo Local
 
-# Iniciar servidor de desarrollo
+```bash
+# Instalar dependencias (desde la raíz de cada proyecto)
+cd frontend && npm install
+cd ../backend && npm install
+
+# Iniciar servidor de desarrollo (frontend)
+cd frontend
 npm run dev
 
-# Construir para producción
-npm run build
+# Iniciar backend (si corresponde)
+cd backend
+npm start
+```
+
+### Docker (Recomendado para Producción)
+
+El proyecto incluye contenedores Docker para frontend y backend, orquestados con `docker-compose`.
+
+**Requisitos:**
+- Docker Desktop instalado
+- Docker Compose v3.8+
+
+**Comandos:**
+
+```bash
+# Construir y levantar todos los contenedores
+docker-compose up --build
+
+# Levantar en segundo plano (detached mode)
+docker-compose up -d --build
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Ver logs de un servicio específico
+docker-compose logs -f frontend
+docker-compose logs -f backend
+
+# Detener los contenedores
+docker-compose down
+
+# Detener y eliminar volúmenes (limpieza completa)
+docker-compose down -v
+
+# Reconstruir un servicio específico
+docker-compose up -d --no-deps --build frontend
+```
+
+**Acceso a la aplicación:**
+- **Frontend**: http://localhost:80
+- **Backend API**: http://localhost:3000
+
+**Variables de entorno:**
+
+Puedes configurar las variables de entorno en `docker-compose.yml`:
+
+```yaml
+environment:
+  - NODE_ENV=production
+  - PORT=3000
+  - DATABASE_URL=tu_url_de_db
+  - JWT_SECRET=tu_secreto
 ```
 
 ## Credenciales de Demostración
@@ -72,33 +127,45 @@ npm run build
 ## Estructura del Proyecto
 
 ```
-src/
-├── components/          # Componentes reutilizables
-│   ├── Layout.jsx
-│   ├── MapComponent.jsx
-│   ├── StatusBadge.jsx
-│   ├── PriorityBadge.jsx
-│   └── ReportCard.jsx
-├── contexts/            # Contextos de React
-│   ├── AuthContext.jsx  # Autenticación
-│   └── DataContext.jsx  # Datos y estado global
-├── data/                # Datos mock y utilidades
-│   └── mockData.js
-├── hooks/               # Hooks personalizados
-│   ├── useGeolocation.js
-│   └── useOffline.js
-├── pages/               # Páginas por rol
-│   ├── Login.jsx
-│   ├── Register.jsx
-│   ├── NotFound.jsx
-│   ├── ciudadano/
-│   ├── municipalidad/
-│   └── cuadrilla/
-├── utils/               # Utilidades
-│   └── storage.js
-├── App.jsx              # Configuración de rutas
-├── main.jsx             # Punto de entrada
-└── index.css            # Estilos globales
+.
+├── frontend/              # Aplicación React + Vite
+│   ├── src/
+│   │   ├── components/    # Componentes reutilizables
+│   │   │   ├── Layout.jsx
+│   │   │   ├── MapComponent.jsx
+│   │   │   ├── StatusBadge.jsx
+│   │   │   ├── PriorityBadge.jsx
+│   │   │   └── ReportCard.jsx
+│   │   ├── contexts/      # Contextos de React
+│   │   │   ├── AuthContext.jsx
+│   │   │   └── DataContext.jsx
+│   │   ├── data/          # Datos mock
+│   │   │   └── mockData.js
+│   │   ├── hooks/         # Hooks personalizados
+│   │   │   ├── useGeolocation.js
+│   │   │   └── useOffline.js
+│   │   ├── pages/         # Páginas por rol
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── NotFound.jsx
+│   │   │   ├── ciudadano/
+│   │   │   ├── municipalidad/
+│   │   │   └── cuadrilla/
+│   │   ├── utils/         # Utilidades
+│   │   │   └── storage.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── vite.config.js
+│   └── tailwind.config.js
+├── backend/               # API Node.js + Express
+│   ├── src/
+│   ├── Dockerfile
+│   └── package.json
+├── docker-compose.yml     # Orquestación de contenedores
+└── README.md
 ```
 
 ## Casos de Uso Implementados
