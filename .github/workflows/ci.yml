@@ -3,9 +3,9 @@ name: LimpiaTuCiudad CI Pipeline
 # 1. ¿Cuándo se ejecuta esto?
 on:
   push:
-    branches: [ "main" ] # Cuando fusionas algo a main
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ] # Cuando creas un PR hacia main
+    branches: [ "main" ]
 
 jobs:
   # ==========================================
@@ -13,10 +13,9 @@ jobs:
   # ==========================================
   validar-frontend:
     runs-on: ubuntu-latest
-    # Le decimos que todos los comandos se ejecuten dentro de la carpeta frontend
     defaults:
       run:
-        working-directory: ./frontend 
+        working-directory: ./frontend
 
     steps:
     - name: Descargar el código
@@ -29,12 +28,11 @@ jobs:
         cache: 'npm'
         cache-dependency-path: ./frontend/package-lock.json
 
-    - name: Instalar dependencias limpias
+    - name: Instalar dependencias
       run: npm ci
 
-    - name: Compilar React/Vite (Verificar que no haya errores de sintaxis)
+    - name: Compilar React/Vite
       run: npm run build
-
 
   # ==========================================
   # TRABAJO 2: Validar el Backend
@@ -56,9 +54,14 @@ jobs:
         cache: 'npm'
         cache-dependency-path: ./backend/package-lock.json
 
-    - name: Instalar dependencias limpias
+    - name: Instalar dependencias
       run: npm ci
 
-    # Si tuvieras pruebas unitarias configuradas, este sería el momento de correrlas:
-    # - name: Correr pruebas
-    #   run: npm test
+    - name: Verificar sintaxis del backend
+      run: node --check src/index.js
+
+    - name: Iniciar backend y verificar health
+      run: |
+        npm start &
+        sleep 3
+        curl -f http://localhost:3000/health || exit 1
