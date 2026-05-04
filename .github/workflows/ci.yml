@@ -35,6 +35,11 @@ jobs:
   # TRABAJO 2: Validar el Backend
   validar-backend:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
     defaults:
       run:
         working-directory: ./backend
