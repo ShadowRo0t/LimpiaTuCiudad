@@ -49,7 +49,7 @@ LimpiaTuCiudad es un sistema que permite a los ciudadanos reportar problemas urb
 ```bash
 # Instalar dependencias (desde la raíz de cada proyecto)
 cd frontend && npm install
-cd ../backend && npm install
+cd ../backend && go mod tidy
 
 # Iniciar servidor de desarrollo (frontend)
 cd frontend
@@ -57,7 +57,7 @@ npm run dev
 
 # Iniciar backend (si corresponde)
 cd backend
-npm start
+go run cmd/api/main.go
 ```
 
 ### Docker (Recomendado para Producción)
@@ -104,9 +104,9 @@ Puedes configurar las variables de entorno en `docker-compose.yml`:
 
 ```yaml
 environment:
-  - NODE_ENV=production
-  - PORT=3000
-  - DATABASE_URL=tu_url_de_db
+  - ENV=production
+  - HTTP_ADDR=:3000
+  - MONGO_URI=tu_url_de_db
   - JWT_SECRET=tu_secreto
 ```
 
@@ -160,10 +160,11 @@ environment:
 │   ├── package.json
 │   ├── vite.config.js
 │   └── tailwind.config.js
-├── backend/               # API Node.js + Express
-│   ├── src/
+├── backend/               # API Go + Chi
+│   ├── cmd/
+│   ├── internal/
 │   ├── Dockerfile
-│   └── package.json
+│   └── go.mod
 ├── docker-compose.yml     # Orquestación de contenedores
 └── README.md
 ```

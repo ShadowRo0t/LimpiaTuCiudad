@@ -12,6 +12,16 @@ npm-debug.log
 
 # Dependencies
 node_modules
+vendor/
+
+# Go artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
 
 # Build outputs
 dist
