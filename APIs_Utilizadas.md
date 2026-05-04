@@ -2,9 +2,9 @@
 
 ## 1. Backend API (REST propia)
 
-**Ubicación:** `backend/src/index.js`
+**Ubicación:** `backend/cmd/api/main.go`
 
-**Base:** Express.js - Framework de Node.js para construir APIs REST.
+**Base:** Go + Chi - Framework HTTP ligero para construir APIs REST.
 
 **Endpoints disponibles:**
 
@@ -14,11 +14,10 @@
 | GET | `/api` | Información general de la API (versión, endpoints disponibles) |
 
 **Dependencias:**
-- `express` ^4.18.2 - Framework web
-- `cors` ^2.8.5 - Middleware para habilitar CORS
-- `dotenv` ^16.3.1 - Manejo de variables de entorno
+- `go-chi/chi/v5` - Enrutador HTTP
+- `go.mongodb.org/mongo-driver` - Driver de MongoDB
 
-**Puerto:** 3000 (o el definido en `process.env.PORT`)
+**Puerto:** 3000 (o el definido en `HTTP_ADDR`)
 
 ---
 
@@ -168,12 +167,13 @@ doc.save('reporte.pdf');
 ```
 
 ### Backend
-```json
-{
-  "express": "^4.18.2",
-  "cors": "^2.8.5",
-  "dotenv": "^16.3.1"
-}
+```go
+require (
+	github.com/go-chi/chi/v5 v5.1.0
+	github.com/golang-jwt/jwt/v5 v5.2.1
+	go.mongodb.org/mongo-driver v1.16.1
+	golang.org/x/crypto v0.26.0
+)
 ```
 
 ---
@@ -182,5 +182,5 @@ doc.save('reporte.pdf');
 
 - **No se utilizan APIs de terceros con autenticación** (como Google Maps API, AWS, etc.) en la versión actual.
 - Los datos se almacenan localmente mediante `localStorage` (modo simulación).
-- El backend Express tiene endpoints mínimos en la versión actual; la lógica principal está en el frontend con datos mock.
+- El backend en Go tiene endpoints mínimos en la versión actual; la lógica principal está en el frontend con datos mock.
 - Los mapas utilizan OpenStreetMap que es gratuito y no requiere API key para uso básico.
