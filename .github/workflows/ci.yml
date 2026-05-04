@@ -8,9 +8,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # ==========================================
   # TRABAJO 1: Validar el Frontend
-  # ==========================================
   validar-frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -34,9 +32,7 @@ jobs:
     - name: Compilar React/Vite
       run: npm run build
 
-  # ==========================================
   # TRABAJO 2: Validar el Backend
-  # ==========================================
   validar-backend:
     runs-on: ubuntu-latest
     defaults:
