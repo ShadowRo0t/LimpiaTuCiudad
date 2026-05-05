@@ -1,6 +1,6 @@
 # LimpiaTuCiudad - Plataforma de Gestión de Reportes Urbanos
 
-Plataforma web completa para la gestión de reportes de problemas urbanos, desarrollada con React + Vite + Tailwind CSS.
+Plataforma web completa para la gestión de reportes de problemas urbanos, desarrollada con React + Vite + Tailwind CSS + go.
 
 ## Descripción del Proyecto
 
