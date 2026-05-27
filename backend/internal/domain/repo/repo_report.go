@@ -103,3 +103,32 @@ func (r *ReportRepo) ExistsDuplicate(ctx context.Context, typ string, lat, lng f
 	}
 	return err == nil, err
 }
+
+func (r *ReportRepo) FindNearbyActive(ctx context.Context, typ string, lat, lng float64, radiusMeters int) ([]domain.Report, error) {
+	filter := bson.M{
+		"type":        typ,
+		"isDuplicate": false,
+		"status":      bson.M{"$ne": string(domain.StatusResuelto)},
+		"location": bson.M{
+			"$near": bson.M{
+				"$geometry": bson.M{
+					"type":        "Point",
+					"coordinates": []float64{lng, lat},
+				},
+				"$maxDistance": radiusMeters,
+			},
+		},
+	}
+	cur, err := r.col.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+
+	var out []domain.Report
+	if err := cur.All(ctx, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+

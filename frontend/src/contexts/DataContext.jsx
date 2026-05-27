@@ -53,7 +53,68 @@ export const DataProvider = ({ children }) => {
   }, [notifications, loading]);
 
   // Crear nuevo reporte
-  const createReport = (reportData) => {
+  const createReport = async (reportData) => {
+    // Estructurar el reporte para que sea compatible con el backend de Go y MongoDB
+    // MongoDB espera GeoPoint: { type: "Point", coordinates: [lng, lat] }
+    // En el frontend se maneja location: { lat, lng }
+    const backendReport = {
+      user_id: reportData.userId, // mapea a user_id en MongoDB
+      type: reportData.type,
+      typeName: reportData.typeName,
+      category: reportData.category,
+      description: reportData.description,
+      address: reportData.address,
+      location: {
+        type: "Point",
+        coordinates: [reportData.location.lng, reportData.location.lat] // GeoJSON [longitud, latitud]
+      },
+      photos: reportData.photos ? reportData.photos.map(p => ({ key: p, url: p })) : [],
+      status: "pendiente",
+      priority: reportData.priority,
+      isDuplicate: false
+    };
+
+    try {
+      // Intentar guardar en la API real de Go
+      const response = await fetch("http://localhost:3000/api/reports", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(backendReport)
+      });
+
+      if (response.ok) {
+        const savedReport = await response.json();
+        // Convertir el formato del backend al formato plano usado en el frontend
+        const frontendFormattedReport = {
+          id: savedReport.id,
+          userId: savedReport.userID,
+          type: savedReport.type,
+          typeName: savedReport.typeName,
+          category: savedReport.category,
+          description: savedReport.description,
+          address: savedReport.address,
+          location: {
+            lat: savedReport.location.coordinates[1],
+            lng: savedReport.location.coordinates[0]
+          },
+          photos: savedReport.photos ? savedReport.photos.map(p => p.key) : [],
+          status: savedReport.status,
+          priority: savedReport.priority,
+          createdAt: savedReport.createdAt,
+          updatedAt: savedReport.updatedAt,
+          isDuplicate: savedReport.isDuplicate
+        };
+
+        setReports(prev => [frontendFormattedReport, ...prev]);
+        return frontendFormattedReport;
+      }
+    } catch (error) {
+      console.warn("La API del Backend está inactiva, usando simulación en localStorage:", error);
+    }
+
+    // Fallback: simulación offline usando localStorage si el backend de Go no responde
     const newReport = {
       id: `rep-${Date.now()}`,
       ...reportData,
@@ -68,6 +129,7 @@ export const DataProvider = ({ children }) => {
     setReports(prev => [newReport, ...prev]);
     return newReport;
   };
+
 
   // Actualizar reporte
   const updateReport = (id, updates) => {

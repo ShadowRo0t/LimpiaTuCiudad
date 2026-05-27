@@ -167,7 +167,7 @@ const CiudadanoNewReport = () => {
     const priority = calculatePriority(formData.type, formData.description);
 
     // Crear reporte
-    const newReport = createReport({
+    const newReport = await createReport({
       userId: user.id,
       type: formData.type,
       typeName: selectedType?.name || formData.type,
@@ -178,6 +178,7 @@ const CiudadanoNewReport = () => {
       photos: photos.map(p => p.name),
       priority
     });
+
 
     // Crear notificación
     createNotification({
