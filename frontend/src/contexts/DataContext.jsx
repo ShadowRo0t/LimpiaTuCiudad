@@ -11,34 +11,78 @@ export const useData = () => {
   return context;
 };
 
+// Mapea el reporte del formato del backend Go al formato plano del frontend
+const mapBackendReportToFrontend = (savedReport) => {
+  return {
+    id: savedReport.id,
+    userId: savedReport.userID,
+    type: savedReport.type,
+    typeName: savedReport.typeName,
+    category: savedReport.category,
+    description: savedReport.description,
+    address: savedReport.address,
+    location: savedReport.location && savedReport.location.coordinates ? {
+      lat: savedReport.location.coordinates[1],
+      lng: savedReport.location.coordinates[0]
+    } : { lat: 0, lng: 0 },
+    photos: savedReport.photos ? savedReport.photos.map(p => p.key) : [],
+    status: savedReport.status,
+    priority: savedReport.priority,
+    assignedTo: savedReport.assignedTo,
+    createdAt: savedReport.createdAt,
+    updatedAt: savedReport.updatedAt,
+    resolvedAt: savedReport.resolvedAt,
+    isDuplicate: savedReport.isDuplicate
+  };
+};
+
 export const DataProvider = ({ children }) => {
   const [reports, setReports] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Cargar datos desde localStorage o usar mock
+  // Cargar datos desde la API o usar localStorage como fallback
   useEffect(() => {
-    const storedReports = localStorage.getItem('ltc_reports');
-    const storedNotifications = localStorage.getItem('ltc_notifications');
+    const loadReports = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/reports");
+        if (response.ok) {
+          const backendReports = await response.json();
+          const formatted = backendReports ? backendReports.map(mapBackendReportToFrontend) : [];
+          setReports(formatted);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.warn("La API del Backend está inactiva para lectura, usando localStorage:", error);
+      }
 
-    if (storedReports) {
-      setReports(JSON.parse(storedReports));
-    } else {
-      setReports(mockReports);
-      localStorage.setItem('ltc_reports', JSON.stringify(mockReports));
-    }
+      // Fallback a localStorage si el backend de Go no responde
+      const storedReports = localStorage.getItem('ltc_reports');
+      if (storedReports) {
+        setReports(JSON.parse(storedReports));
+      } else {
+        setReports(mockReports);
+        localStorage.setItem('ltc_reports', JSON.stringify(mockReports));
+      }
+      setLoading(false);
+    };
 
-    if (storedNotifications) {
-      setNotifications(JSON.parse(storedNotifications));
-    } else {
-      setNotifications(mockNotifications);
-      localStorage.setItem('ltc_notifications', JSON.stringify(mockNotifications));
-    }
+    const loadNotifications = () => {
+      const storedNotifications = localStorage.getItem('ltc_notifications');
+      if (storedNotifications) {
+        setNotifications(JSON.parse(storedNotifications));
+      } else {
+        setNotifications(mockNotifications);
+        localStorage.setItem('ltc_notifications', JSON.stringify(mockNotifications));
+      }
+    };
 
-    setLoading(false);
+    loadReports();
+    loadNotifications();
   }, []);
 
-  // Guardar reports cuando cambien
+  // Guardar reports cuando cambien (solo localmente como backup)
   useEffect(() => {
     if (!loading) {
       localStorage.setItem('ltc_reports', JSON.stringify(reports));
@@ -55,8 +99,6 @@ export const DataProvider = ({ children }) => {
   // Crear nuevo reporte
   const createReport = async (reportData) => {
     // Estructurar el reporte para que sea compatible con el backend de Go y MongoDB
-    // MongoDB espera GeoPoint: { type: "Point", coordinates: [lng, lat] }
-    // En el frontend se maneja location: { lat, lng }
     const backendReport = {
       user_id: reportData.userId, // mapea a user_id en MongoDB
       type: reportData.type,
@@ -86,26 +128,7 @@ export const DataProvider = ({ children }) => {
 
       if (response.ok) {
         const savedReport = await response.json();
-        // Convertir el formato del backend al formato plano usado en el frontend
-        const frontendFormattedReport = {
-          id: savedReport.id,
-          userId: savedReport.userID,
-          type: savedReport.type,
-          typeName: savedReport.typeName,
-          category: savedReport.category,
-          description: savedReport.description,
-          address: savedReport.address,
-          location: {
-            lat: savedReport.location.coordinates[1],
-            lng: savedReport.location.coordinates[0]
-          },
-          photos: savedReport.photos ? savedReport.photos.map(p => p.key) : [],
-          status: savedReport.status,
-          priority: savedReport.priority,
-          createdAt: savedReport.createdAt,
-          updatedAt: savedReport.updatedAt,
-          isDuplicate: savedReport.isDuplicate
-        };
+        const frontendFormattedReport = mapBackendReportToFrontend(savedReport);
 
         setReports(prev => [frontendFormattedReport, ...prev]);
         return frontendFormattedReport;
