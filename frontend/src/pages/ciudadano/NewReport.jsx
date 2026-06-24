@@ -34,6 +34,8 @@ const CiudadanoNewReport = () => {
   const [duplicateWarning, setDuplicateWarning] = useState(null);
   const [showMap, setShowMap] = useState(false);
   const [gettingLocation, setGettingLocation] = useState(false);
+  const [aiScanning, setAiScanning] = useState(false);
+  const [scanStep, setScanStep] = useState(0);
   const fileInputRef = useRef(null);
 
   // Obtener ubicación GPS
@@ -160,22 +162,37 @@ const CiudadanoNewReport = () => {
 
     setLoading(true);
 
-    // Simular delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Animación de escaneo de IA para árboles caídos
+    if (formData.type === 'arbol' && photos.length > 0) {
+      setAiScanning(true);
+      setScanStep(0);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setScanStep(1);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setScanStep(2);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setScanStep(3);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setScanStep(4);
+      await new Promise(resolve => setTimeout(resolve, 600));
+    } else {
+      // Simular delay estándar
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
 
     const selectedType = incidentTypes.find(t => t.id === formData.type);
     const priority = calculatePriority(formData.type, formData.description);
 
-    // Crear reporte
+    // Crear reporte (pasando el preview para que el backend tenga base64)
     const newReport = await createReport({
       userId: user.id,
       type: formData.type,
       typeName: selectedType?.name || formData.type,
-      category: selectedType?.category || 'otros',
+      category: selectedType?.category || 'espacios_verdes',
       description: formData.description,
       address: formData.address,
       location,
-      photos: photos.map(p => p.name),
+      photos: photos.map(p => ({ name: p.name, preview: p.preview })),
       priority
     });
 
@@ -190,6 +207,7 @@ const CiudadanoNewReport = () => {
       read: false
     });
 
+    setAiScanning(false);
     setLoading(false);
     setSuccess('¡Reporte creado exitosamente!');
 
@@ -410,6 +428,76 @@ const CiudadanoNewReport = () => {
           </button>
         </div>
       </form>
+
+      {/* Modal de escaneo de IA */}
+      {aiScanning && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-slate-950 border border-emerald-500/30 rounded-2xl max-w-lg w-full p-6 text-white shadow-2xl shadow-emerald-500/10">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-3 h-3 rounded-full bg-emerald-500 animate-ping" />
+              <h3 className="text-lg font-bold tracking-wide text-emerald-400 font-mono">OWL-ViT VISION DETECTOR ACTIVE</h3>
+            </div>
+            
+            {/* Foto siendo escaneada */}
+            {photos.length > 0 && (
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-emerald-500/20 mb-6">
+                <img
+                  src={photos[0].preview}
+                  alt="Escaneando..."
+                  className="w-full h-full object-cover opacity-80"
+                />
+                {/* Línea de escaneo láser */}
+                <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-scan" />
+                
+                {/* Animación de cajas de detección simuladas que aparecen durante el escaneo */}
+                {scanStep >= 3 && (
+                  <div className="absolute inset-0 bg-emerald-500/5 animate-pulse">
+                    <div className="absolute border-2 border-emerald-400 rounded px-2 py-1 text-[10px] font-mono font-bold text-emerald-400 bg-slate-900/80 animate-fade-in" style={{ top: '20%', left: '10%', width: '70%', height: '60%' }}>
+                      árbol caído [Conf. 95%]
+                    </div>
+                    {formData.description.toLowerCase().includes('cable') && (
+                      <div className="absolute border-2 border-red-500 rounded px-2 py-1 text-[10px] font-mono font-bold text-red-500 bg-slate-900/80 animate-fade-in" style={{ top: '45%', left: '10%', width: '40%', height: '35%' }}>
+                        cables dañados [Conf. 86%]
+                      </div>
+                    )}
+                    {formData.description.toLowerCase().includes('auto') && (
+                      <div className="absolute border-2 border-yellow-500 rounded px-2 py-1 text-[10px] font-mono font-bold text-yellow-500 bg-slate-900/80 animate-fade-in" style={{ top: '60%', left: '40%', width: '50%', height: '35%' }}>
+                        vehículo dañado [Conf. 90%]
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* Registro de consola de IA */}
+            <div className="bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 border border-slate-800 space-y-2 h-40 overflow-y-auto">
+              <div className="flex justify-between items-center text-slate-500">
+                <span>[PROCESS LOG]</span>
+                <span>SYS_OK</span>
+              </div>
+              <div className="text-emerald-500">&gt; Inicializando detector OWL-ViT...</div>
+              {scanStep >= 1 && <div className="text-emerald-400">&gt; Imagen cargada. Convirtiendo a tensores...</div>}
+              {scanStep >= 2 && <div className="text-sky-400">&gt; Ejecutando modelo zero-shot google/owlvit-base-patch32...</div>}
+              {scanStep >= 3 && (
+                <div className="text-yellow-400 font-bold">
+                  &gt; Objetos localizados en escena:
+                  <ul className="pl-4 mt-1 space-y-1 font-normal text-slate-300">
+                    <li>- árbol caído (95% conf)</li>
+                    {formData.description.toLowerCase().includes('cable') && <li className="text-red-400">- cables dañados (86% conf)</li>}
+                    {formData.description.toLowerCase().includes('auto') && <li className="text-yellow-400">- vehículo dañado (90% conf)</li>}
+                  </ul>
+                </div>
+              )}
+              {scanStep >= 4 && <div className="text-emerald-500 font-bold">&gt; Clasificación de peligro y justificación de riesgo completadas!</div>}
+            </div>
+            
+            <p className="text-center text-xs text-slate-500 mt-4">
+              Por favor, espera. La IA está procesando las evidencias.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

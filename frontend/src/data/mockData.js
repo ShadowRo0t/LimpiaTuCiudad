@@ -167,7 +167,21 @@ export const mockReports = [
     createdAt: '2024-03-16T11:20:00',
     updatedAt: '2024-03-16T11:20:00',
     resolvedAt: null,
-    isDuplicate: false
+    isDuplicate: false,
+    aiAnalysis: {
+      performed: true,
+      hasFallenTree: true,
+      dangerLevel: 'media',
+      confidence: 0.88,
+      reason: 'Se identificó una rama rota de tamaño mediano con peligro de colapso directo sobre la vereda peatonal. No se aprecian daños materiales ni de tendido eléctrico en la captura analizada.',
+      treeSize: 'mediano',
+      obstruction: 'bloqueo de vereda',
+      damage: 'ninguno',
+      objects: [
+        { label: 'rama de árbol rota', confidence: 0.91, box: [25, 30, 65, 75] },
+        { label: 'vereda bloqueada', confidence: 0.82, box: [40, 20, 85, 80] }
+      ]
+    }
   },
   {
     id: 'rep-006',

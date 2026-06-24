@@ -31,6 +31,64 @@ type BertOutput struct {
 	Error        string    `json:"error,omitempty"`
 }
 
+type OwlvitInput struct {
+	Description string `json:"description"`
+	PhotoPath   string `json:"photoPath"`
+	PhotoBase64 string `json:"photoBase64"`
+}
+
+// computeOwlvitDetection llama al script de Python owlvit_detector.py para detectar el estado del árbol caído
+func (s *ReportService) computeOwlvitDetection(desc string, photoSource string, isBase64 bool) (*domain.AIDetection, error) {
+	inputData := OwlvitInput{
+		Description: desc,
+	}
+	if isBase64 {
+		inputData.PhotoBase64 = photoSource
+	} else {
+		inputData.PhotoPath = photoSource
+	}
+
+	payload, err := json.Marshal(inputData)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal Owlvit input: %w", err)
+	}
+
+	cmd := exec.Command("python", "owlvit_detector.py")
+	
+	var stdout, stderr bytes.Buffer
+	cmd.Stdin = bytes.NewReader(payload)
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	// Timeout de 25 segundos para procesamiento local de imágenes con Deep Learning
+	ctx, cancel := context.WithTimeout(context.Background(), 25*time.Second)
+	defer cancel()
+
+	done := make(chan error, 1)
+	go func() {
+		done <- cmd.Run()
+	}()
+
+	select {
+	case <-ctx.Done():
+		if cmd.Process != nil {
+			_ = cmd.Process.Kill()
+		}
+		return nil, fmt.Errorf("OWL-ViT detector script execution timed out")
+	case err = <-done:
+		if err != nil {
+			return nil, fmt.Errorf("OWL-ViT detector execution failed: %v, stderr: %s", err, stderr.String())
+		}
+	}
+
+	var output domain.AIDetection
+	if err := json.Unmarshal(stdout.Bytes(), &output); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal OWL-ViT output: %w, raw: %s", err, stdout.String())
+	}
+
+	return &output, nil
+}
+
 // computeBertSimilarity llama al script de Python bert_similarity.py para obtener el porcentaje de similitud
 func (s *ReportService) computeBertSimilarity(newDesc string, existingDescs []string) ([]float64, error) {
 	inputData := BertInput{
@@ -94,6 +152,37 @@ func (s *ReportService) Create(ctx context.Context, rpt *domain.Report) error {
 	if rpt.Priority == "" {
 		rpt.Priority = domain.PriorityBaja
 	}
+
+	// Ejecutar análisis OWL-ViT si es un reporte de árbol y tiene fotos
+	if rpt.Type == "arbol" && len(rpt.Photos) > 0 {
+		log.Printf("[ReportService] Ejecutando análisis OWL-ViT para reporte de árbol caído...")
+		photoSource := rpt.Photos[0].URL
+		isBase64 := false
+		if len(photoSource) > 30 && (photoSource[:10] == "data:image" || len(photoSource) > 1000) {
+			isBase64 = true
+		}
+		
+		aiResult, err := s.computeOwlvitDetection(rpt.Description, photoSource, isBase64)
+		if err != nil {
+			log.Printf("[ReportService] Error en análisis OWL-ViT: %v. Usando fallback local.", err)
+		} else {
+			rpt.AIAnalysis = aiResult
+			log.Printf("[ReportService] Análisis OWL-ViT completado. Nivel de peligro: %s", aiResult.DangerLevel)
+			
+			// Ajustar la prioridad del reporte basado en el peligro de la IA
+			switch aiResult.DangerLevel {
+			case "critica":
+				rpt.Priority = domain.PriorityCritica
+			case "alta":
+				rpt.Priority = domain.PriorityAlta
+			case "media":
+				rpt.Priority = domain.PriorityMedia
+			case "baja":
+				rpt.Priority = domain.PriorityBaja
+			}
+		}
+	}
+
 
 	// 1. Buscar reportes activos del mismo tipo en un radio de 100 metros
 	// coordenadas en GeoJSON: [lng, lat]

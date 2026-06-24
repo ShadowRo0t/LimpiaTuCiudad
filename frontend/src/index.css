@@ -95,3 +95,14 @@ body {
 .priority-critica {
   @apply bg-purple-100 text-purple-700;
 }
+
+@keyframes scan {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.animate-scan {
+  animation: scan 2.5s ease-in-out infinite;
+}
+

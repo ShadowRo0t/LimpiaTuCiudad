@@ -20,8 +20,35 @@ const MunicipalidadReports = () => {
   });
   const [selectedReport, setSelectedReport] = useState(null);
   const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showBoxes, setShowBoxes] = useState(true);
 
   const cuadrillas = mockUsers.filter(u => u.role === 'cuadrilla');
+
+  // Calcula el ranking de gravedad del reporte de árbol frente a los demás activos
+  const getTreeReportRank = (report) => {
+    if (report.type !== 'arbol') return null;
+    const treeReports = reports
+      .filter(r => r.type === 'arbol' && r.status !== 'resuelto' && r.status !== 'rechazado' && r.aiAnalysis)
+      .map(r => {
+        let score = 0;
+        if (r.aiAnalysis.dangerLevel === 'critica') score = 40;
+        else if (r.aiAnalysis.dangerLevel === 'alta') score = 30;
+        else if (r.aiAnalysis.dangerLevel === 'media') score = 20;
+        else score = 10;
+        
+        // Desempate por antigüedad (más antiguo = más prioridad)
+        const timeScore = (2000000000000 - new Date(r.createdAt).getTime()) / 10000000000;
+        return { id: r.id, score: score + timeScore };
+      })
+      .sort((a, b) => b.score - a.score);
+      
+    const rankIndex = treeReports.findIndex(r => r.id === report.id);
+    return {
+      rank: rankIndex !== -1 ? rankIndex + 1 : 1,
+      total: treeReports.length || 1,
+      percentile: rankIndex !== -1 ? Math.round(((treeReports.length - rankIndex) / treeReports.length) * 100) : 100
+    };
+  };
 
   useEffect(() => {
     const allReports = getAllReports();
@@ -251,6 +278,112 @@ const MunicipalidadReports = () => {
                 <p className="text-gray-600 text-sm">{selectedReport.description}</p>
                 <p className="text-gray-500 text-sm mt-2">{selectedReport.address}</p>
               </div>
+
+              {/* Panel de Detección de Árboles Caídos por IA para la Municipalidad */}
+              {selectedReport.aiAnalysis && selectedReport.aiAnalysis.performed && (
+                <div className="bg-slate-900 text-slate-100 rounded-xl border border-slate-800 p-4 space-y-4 shadow-md">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold px-1.5 py-0.5 rounded font-mono">OWL-ViT DETECTOR</span>
+                      <h4 className="font-bold text-xs font-mono text-slate-200">INFORME TÉCNICO DE IA</h4>
+                    </div>
+                    <button 
+                      onClick={() => setShowBoxes(!showBoxes)}
+                      className="text-[10px] font-mono text-emerald-400 underline hover:text-emerald-300"
+                    >
+                      {showBoxes ? 'Ocultar Cajas' : 'Ver Cajas'}
+                    </button>
+                  </div>
+
+                  {/* Imagen y Bounding Boxes en miniatura */}
+                  <div className="relative aspect-video rounded-lg overflow-hidden border border-slate-800 bg-slate-950">
+                    <img
+                      src={selectedReport.photos[0] && (selectedReport.photos[0].startsWith('data:') || selectedReport.photos[0].startsWith('blob:'))
+                        ? selectedReport.photos[0] 
+                        : 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80'}
+                      alt="Detección de IA"
+                      className="w-full h-full object-cover opacity-90"
+                    />
+                    
+                    {showBoxes && selectedReport.aiAnalysis.objects && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        {selectedReport.aiAnalysis.objects.map((obj, i) => {
+                          const [ymin, xmin, ymax, xmax] = obj.box;
+                          let borderClass = 'border-emerald-400 text-emerald-400 bg-slate-950/80';
+                          if (obj.label.includes('cable') || obj.label.includes('eléctrico')) {
+                            borderClass = 'border-red-500 text-red-400 bg-red-950/80';
+                          } else if (obj.label.includes('vehículo') || obj.label.includes('auto') || obj.label.includes('propiedad')) {
+                            borderClass = 'border-yellow-500 text-yellow-400 bg-yellow-950/80';
+                          } else if (obj.label.includes('calle') || obj.label.includes('vereda')) {
+                            borderClass = 'border-sky-400 text-sky-400 bg-sky-950/80';
+                          }
+                          return (
+                            <div
+                              key={i}
+                              className={`absolute border-2 rounded ${borderClass}`}
+                              style={{
+                                top: `${ymin}%`,
+                                left: `${xmin}%`,
+                                width: `${xmax - xmin}%`,
+                                height: `${ymax - ymin}%`
+                              }}
+                            >
+                              <span className="absolute -top-4 left-0 px-1 py-0.5 text-[7px] font-mono font-bold rounded shadow-md border border-inherit">
+                                {obj.label} ({Math.round(obj.confidence * 100)}%)
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Comparador de Riesgo con existentes */}
+                  {(() => {
+                    const rankInfo = getTreeReportRank(selectedReport);
+                    if (!rankInfo) return null;
+                    return (
+                      <div className="bg-slate-950 border border-slate-800/80 rounded-lg p-3 space-y-2">
+                        <div className="flex justify-between items-center text-xs font-mono">
+                          <span className="text-slate-400">Riesgo Comparativo:</span>
+                          <span className="text-emerald-400 font-bold">Puesto {rankInfo.rank} de {rankInfo.total}</span>
+                        </div>
+                        <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-emerald-500 rounded-full animate-pulse" 
+                            style={{ width: `${rankInfo.percentile}%` }} 
+                          />
+                        </div>
+                        <p className="text-[10px] text-slate-400 leading-tight">
+                          Ubicado en el <strong className="text-emerald-400">{rankInfo.percentile}%</strong> más severo de los árboles caídos activos. Prioridad aconsejada.
+                        </p>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Métricas breves */}
+                  <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                    <div className="bg-slate-800/50 p-2 rounded border border-slate-800/50">
+                      <p className="text-[8px] text-slate-400">TAMAÑO</p>
+                      <p className="text-xs font-bold text-slate-200 capitalize">{selectedReport.aiAnalysis.treeSize}</p>
+                    </div>
+                    <div className="bg-slate-800/50 p-2 rounded border border-slate-800/50">
+                      <p className="text-[8px] text-slate-400">OBSTRUCCIÓN</p>
+                      <p className="text-xs font-bold text-slate-200 capitalize truncate">{selectedReport.aiAnalysis.obstruction.replace('bloqueo de ', '')}</p>
+                    </div>
+                    <div className="bg-slate-800/50 p-2 rounded border border-slate-800/50">
+                      <p className="text-[8px] text-slate-400">DAÑO</p>
+                      <p className="text-xs font-bold text-slate-200 capitalize truncate">{selectedReport.aiAnalysis.damage.replace('daño a ', '')}</p>
+                    </div>
+                  </div>
+
+                  {/* Explicación / Justificación */}
+                  <div className="bg-slate-950/80 border border-slate-800/50 p-3 rounded-lg text-xs leading-relaxed text-slate-300">
+                    <strong className="text-slate-400 block font-mono text-[9px] mb-1">JUSTIFICACIÓN TÉCNICA DEL MODELO:</strong>
+                    {selectedReport.aiAnalysis.reason}
+                  </div>
+                </div>
+              )}
 
               {/* Estado actual */}
               <div className="flex items-center gap-4">

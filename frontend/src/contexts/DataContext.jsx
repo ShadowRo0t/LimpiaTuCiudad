@@ -32,7 +32,8 @@ const mapBackendReportToFrontend = (savedReport) => {
     createdAt: savedReport.createdAt,
     updatedAt: savedReport.updatedAt,
     resolvedAt: savedReport.resolvedAt,
-    isDuplicate: savedReport.isDuplicate
+    isDuplicate: savedReport.isDuplicate,
+    aiAnalysis: savedReport.aiAnalysis
   };
 };
 
@@ -96,6 +97,93 @@ export const DataProvider = ({ children }) => {
     }
   }, [notifications, loading]);
 
+  // Simulación de análisis OWL-ViT en el frontend (para modo offline/localStorage)
+  const simulateTreeAIAnalysis = (description) => {
+    const descLower = description.toLowerCase();
+    
+    let treeSize = 'mediano';
+    if (descLower.includes('grande') || descLower.includes('gigante') || descLower.includes('enorme') || descLower.includes('tronco')) {
+      treeSize = 'grande';
+    } else if (descLower.includes('pequeño') || descLower.includes('chico') || descLower.includes('rama') || descLower.includes('ramita') || descLower.includes('gajo')) {
+      treeSize = 'pequeño';
+    }
+    
+    let damage = 'ninguno';
+    const detectedObjects = [];
+    
+    if (descLower.includes('cable') || descLower.includes('luz') || descLower.includes('electricidad') || descLower.includes('tensión') || descLower.includes('poste')) {
+      damage = 'daño a tendido eléctrico';
+      detectedObjects.push({ label: 'cables dañados', confidence: 0.86, box: [45, 10, 80, 50] });
+    } else if (descLower.includes('auto') || descLower.includes('vehículo') || descLower.includes('carro') || descLower.includes('camioneta')) {
+      damage = 'daño a vehículo';
+      detectedObjects.push({ label: 'vehículo dañado', confidence: 0.90, box: [60, 40, 95, 90] });
+    } else if (descLower.includes('casa') || descLower.includes('techo') || descLower.includes('propiedad') || descLower.includes('reja')) {
+      damage = 'daño a propiedad';
+      detectedObjects.push({ label: 'propiedad dañada', confidence: 0.79, box: [30, 50, 75, 95] });
+    }
+    
+    let obstruction = 'ninguno';
+    if (descLower.includes('calle') || descLower.includes('avenida') || descLower.includes('calzada') || descLower.includes('tránsito') || descLower.includes('ruta')) {
+      obstruction = 'bloqueo de calle';
+      detectedObjects.push({ label: 'calle bloqueada', confidence: 0.92, box: [35, 0, 90, 100] });
+    } else if (descLower.includes('vereda') || descLower.includes('peatón') || descLower.includes('acera') || descLower.includes('paso')) {
+      obstruction = 'bloqueo de vereda';
+      detectedObjects.push({ label: 'vereda bloqueada', confidence: 0.85, box: [40, 20, 85, 80] });
+    }
+    
+    let treeBox = [20, 10, 80, 90];
+    if (treeSize === 'grande') {
+      treeBox = [10, 5, 85, 95];
+    } else if (treeSize === 'pequeño') {
+      treeBox = [35, 30, 70, 70];
+    }
+    
+    detectedObjects.unshift({
+      label: `árbol caído (${treeSize})`,
+      confidence: 0.95,
+      box: treeBox
+    });
+    
+    let dangerLevel = 'baja';
+    if ((obstruction === 'bloqueo de calle' && damage !== 'ninguno') || (treeSize === 'grande' && damage === 'daño a tendido eléctrico')) {
+      dangerLevel = 'critica';
+    } else if (obstruction === 'bloqueo de calle' || damage === 'daño a tendido eléctrico' || damage === 'daño a vehículo') {
+      dangerLevel = 'alta';
+    } else if (obstruction === 'bloqueo de vereda' || treeSize === 'grande') {
+      dangerLevel = 'media';
+    }
+    
+    const reasons = [];
+    reasons.push(`[Simulación OWL-ViT] Se detectó un árbol caído de tamaño ${treeSize}.`);
+    if (obstruction === 'bloqueo de calle') {
+      reasons.push("Obstruye por completo la calzada vial, interrumpiendo el tránsito vehicular.");
+    } else if (obstruction === 'bloqueo de vereda') {
+      reasons.push("Bloquea el paso peatonal por la vereda, forzando a transeúntes a bajar a la calle.");
+    }
+    
+    if (damage === 'daño a tendido eléctrico') {
+      reasons.push("Se identificaron cables eléctricos cortados/dañados en contacto con las ramas, peligro de descarga.");
+    } else if (damage === 'daño a vehículo') {
+      reasons.push("El árbol impactó sobre un vehículo estacionado en la vía pública.");
+    } else if (damage === 'daño a propiedad') {
+      reasons.push("Ramas u horquetas del árbol dañaron estructuras edilicias o linderas.");
+    }
+    
+    const reason = reasons.join(" ");
+    
+    return {
+      performed: true,
+      hasFallenTree: true,
+      dangerLevel,
+      confidence: 0.95,
+      reason,
+      treeSize,
+      obstruction,
+      damage,
+      objects: detectedObjects
+    };
+  };
+
   // Crear nuevo reporte
   const createReport = async (reportData) => {
     // Estructurar el reporte para que sea compatible con el backend de Go y MongoDB
@@ -110,7 +198,7 @@ export const DataProvider = ({ children }) => {
         type: "Point",
         coordinates: [reportData.location.lng, reportData.location.lat] // GeoJSON [longitud, latitud]
       },
-      photos: reportData.photos ? reportData.photos.map(p => ({ key: p, url: p })) : [],
+      photos: reportData.photos ? reportData.photos.map(p => ({ key: p.name || p, url: p.preview || p })) : [],
       status: "pendiente",
       priority: reportData.priority,
       isDuplicate: false
@@ -138,11 +226,25 @@ export const DataProvider = ({ children }) => {
     }
 
     // Fallback: simulación offline usando localStorage si el backend de Go no responde
+    let aiAnalysis = null;
+    let priority = reportData.priority;
+    if (reportData.type === 'arbol' && reportData.photos && reportData.photos.length > 0) {
+      aiAnalysis = simulateTreeAIAnalysis(reportData.description);
+      // Ajustar prioridad según la IA
+      if (aiAnalysis.dangerLevel === 'critica') priority = 'critica';
+      else if (aiAnalysis.dangerLevel === 'alta') priority = 'alta';
+      else if (aiAnalysis.dangerLevel === 'media') priority = 'media';
+      else if (aiAnalysis.dangerLevel === 'baja') priority = 'baja';
+    }
+
     const newReport = {
       id: `rep-${Date.now()}`,
       ...reportData,
+      photos: reportData.photos ? reportData.photos.map(p => p.preview || p) : [],
+      priority,
       status: 'pendiente',
       assignedTo: null,
+      aiAnalysis,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       resolvedAt: null,

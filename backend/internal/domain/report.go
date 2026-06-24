@@ -30,6 +30,24 @@ type PhotoRef struct {
 	URL string `bson:"url" json:"url"`
 }
 
+type DetectedObject struct {
+	Label      string     `bson:"label" json:"label"`
+	Confidence float64    `bson:"confidence" json:"confidence"`
+	Box        [4]float64 `bson:"box" json:"box"` // [ymin, xmin, ymax, xmax]
+}
+
+type AIDetection struct {
+	Performed     bool             `bson:"performed" json:"performed"`
+	HasFallenTree bool             `bson:"hasFallenTree" json:"hasFallenTree"`
+	DangerLevel   string           `bson:"dangerLevel" json:"dangerLevel"`
+	Confidence    float64          `bson:"confidence" json:"confidence"`
+	Reason        string           `bson:"reason" json:"reason"`
+	TreeSize      string           `bson:"treeSize" json:"treeSize"`
+	Obstruction   string           `bson:"obstruction" json:"obstruction"`
+	Damage        string           `bson:"damage" json:"damage"`
+	Objects       []DetectedObject `bson:"objects" json:"objects"`
+}
+
 type Report struct {
 	ID     ObjectID `bson:"_id,omitempty" json:"id"`
 	UserID ObjectID `bson:"user_id" json:"userID"`
@@ -52,6 +70,9 @@ type Report struct {
 	ResolutionPhoto *PhotoRef  `bson:"resolutionPhoto" json:"resolutionPhoto"`
 	ResolutionNotes string     `bson:"resolutionNotes,omitempty" json:"resolutionNotes,omitempty"`
 
+	AIAnalysis *AIDetection `bson:"aiAnalysis,omitempty" json:"aiAnalysis,omitempty"`
+
 	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
 	UpdatedAt time.Time `bson:"updatedAt" json:"updatedAt"`
 }
+
